@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.local/schemas/hermes-buzz/swarm-receipt.schema.json",
+  "title": "Hermes Buzz Swarm Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "task_id",
+    "community_id",
+    "channel_id",
+    "thread_root_event_id",
+    "request_event_id",
+    "actors",
+    "capability_policy",
+    "tools_used",
+    "artifacts",
+    "claim_changes",
+    "external_side_effects",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "receipt_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "community_id": { "type": "string", "minLength": 1 },
+    "channel_id": { "type": "string", "minLength": 1 },
+    "thread_root_event_id": { "type": "string", "minLength": 1 },
+    "request_event_id": { "type": "string", "minLength": 1 },
+    "actors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requester", "executors", "verifiers"],
+      "properties": {
+        "requester": { "type": "string", "minLength": 1 },
+        "executors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "verifiers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "approvers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "capability_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow", "deny"],
+      "properties": {
+        "allow": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "deny": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "tools_used": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "sha256"],
+        "properties": {
+          "ref": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+          "buzz_event_id": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "claim_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "state"],
+        "properties": {
+          "claim_id": { "type": "string", "minLength": 1 },
+          "state": {
+            "type": "string",
+            "enum": ["UNVERIFIED", "SOURCE_FOUND", "INDEPENDENTLY_CONFIRMED", "CORRECTED", "DISPUTED", "STALE", "RETRACTED"]
+          },
+          "event_id": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "external_side_effects": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["completed", "review-ready", "blocked", "escalated", "rejected", "failed"]
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
