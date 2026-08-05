@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.local/schemas/hermes-buzz/claim-record.schema.json",
+  "title": "Hermes Buzz Claim Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "claim_id",
+    "task_id",
+    "community_id",
+    "thread_root_event_id",
+    "statement",
+    "state",
+    "author_agent",
+    "source_refs",
+    "history"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "claim_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "community_id": { "type": "string", "minLength": 1 },
+    "thread_root_event_id": { "type": "string", "minLength": 1 },
+    "statement": { "type": "string", "minLength": 1, "maxLength": 12000 },
+    "state": {
+      "type": "string",
+      "enum": [
+        "UNVERIFIED",
+        "SOURCE_FOUND",
+        "INDEPENDENTLY_CONFIRMED",
+        "CORRECTED",
+        "DISPUTED",
+        "STALE",
+        "RETRACTED"
+      ]
+    },
+    "author_agent": { "type": "string", "minLength": 1 },
+    "source_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "current_wording": { "type": "string", "minLength": 1, "maxLength": 12000 },
+    "verifier_agents": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "history": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["state", "actor", "event_id", "timestamp"],
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "UNVERIFIED",
+              "SOURCE_FOUND",
+              "INDEPENDENTLY_CONFIRMED",
+              "CORRECTED",
+              "DISPUTED",
+              "STALE",
+              "RETRACTED"
+            ]
+          },
+          "actor": { "type": "string", "minLength": 1 },
+          "event_id": { "type": "string", "minLength": 1 },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "replacement_wording": { "type": ["string", "null"] },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
