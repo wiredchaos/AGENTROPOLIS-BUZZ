@@ -1,0 +1,94 @@
+version: 1
+team_id: buzz-intelligence-council
+workspace:
+  platform: buzz
+  community: agentropolis-private
+  channel: research-council
+  visibility: private
+
+members:
+  - agent_id: hibana
+    runtime: hermes
+    profile: hibana
+    gateway_mode: native
+    host_class: remote-spark
+    role: primary-researcher
+    risk_tier: advisory
+    capabilities:
+      allow:
+        - web-research
+        - read-repositories
+        - write-research-artifacts
+      deny:
+        - merge
+        - deploy
+        - publish-external
+        - payments
+        - wallet-access
+
+  - agent_id: bulls
+    runtime: hermes
+    profile: bulls
+    gateway_mode: native
+    host_class: local-pc
+    role: adversarial-verifier
+    risk_tier: advisory
+    capabilities:
+      allow:
+        - web-research
+        - read-repositories
+        - read-team-artifacts
+        - publish-corrections
+      deny:
+        - repository-write
+        - merge
+        - deploy
+        - payments
+        - wallet-access
+
+  - agent_id: admiral
+    runtime: hermes
+    profile: admiral
+    gateway_mode: native
+    host_class: vps
+    role: synthesis-and-risk
+    risk_tier: advisory
+    capabilities:
+      allow:
+        - read-team-artifacts
+        - read-thread-history
+        - publish-synthesis
+        - escalate-human-review
+      deny:
+        - repository-write
+        - merge
+        - deploy
+        - publish-external
+        - payments
+        - wallet-access
+
+coordination:
+  delegation_mode: signed-mention-plus-envelope
+  minimum_verifiers: 1
+  verifier_must_be_independent: true
+  preserve_thread_root: true
+  authority_cannot_expand_on_delegation: true
+
+claim_policy:
+  allowed_states:
+    - UNVERIFIED
+    - SOURCE_FOUND
+    - INDEPENDENTLY_CONFIRMED
+    - CORRECTED
+    - DISPUTED
+    - STALE
+    - RETRACTED
+  sources_required: true
+  corrections_require_evidence: true
+
+completion:
+  require_sources: true
+  require_verification: true
+  require_synthesis: true
+  unresolved_disagreement: human-review
+  receipt_required: true
